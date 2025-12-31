@@ -48,19 +48,16 @@
         .table-container { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; min-width: 800px; }
         table th, table td { padding: 15px 12px; text-align: left; border-bottom: 1px solid #e0e0e0; }
-        table th { background: #f5f7fa; font-weight: 600; color: #333; position: sticky; top: 0; }
+        table th { background: #f5f7fa; font-weight: 600; color: #333; }
         table tbody tr:hover { background: #f9fafb; }
         
         /* Buttons */
-        .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; display: inline-block; text-decoration: none; }
+        .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; display: inline-block; }
         .btn-sm { padding: 6px 12px; font-size: 13px; }
         .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); }
         .btn-success { background: #10b981; color: white; }
-        .btn-success:hover { background: #059669; }
         .btn-danger { background: #ef4444; color: white; }
-        .btn-danger:hover { background: #dc2626; }
-        .btn-warning { background: #f59e0b; color: white; }
         .btn-info { background: #3b82f6; color: white; }
         .logout-btn { background: #ef4444; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
         
@@ -76,15 +73,14 @@
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #667eea; }
         
-        /* Attendance Students List */
+        /* Attendance Students */
         .attendance-student-item { padding: 15px; background: white; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 2px solid #e0e0e0; }
         .attendance-student-item:hover { border-color: #667eea; }
         .attendance-student-name { font-weight: 600; color: #333; }
         .attendance-student-phone { color: #666; font-size: 14px; margin-top: 3px; }
         .attendance-radio-group { display: flex; gap: 15px; }
-        .attendance-radio-group label { cursor: pointer; padding: 5px 10px; border-radius: 6px; transition: all 0.3s; }
+        .attendance-radio-group label { cursor: pointer; padding: 5px 10px; border-radius: 6px; }
         .attendance-radio-group input[type="radio"] { margin-right: 5px; }
-        .attendance-radio-group label:has(input:checked) { background: #667eea; color: white; }
         
         /* Badges */
         .badge { padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; }
@@ -96,18 +92,16 @@
         /* Alert */
         .alert { padding: 15px; border-radius: 8px; margin-bottom: 20px; }
         .alert-success { background: #d1fae5; color: #065f46; border-left: 4px solid #10b981; }
-        .alert-info { background: #dbeafe; color: #1e40af; border-left: 4px solid #3b82f6; }
         .alert-warning { background: #fef3c7; color: #92400e; border-left: 4px solid #f59e0b; }
         
         /* Responsive */
         @media (max-width: 768px) {
             .stats-grid { grid-template-columns: 1fr; }
-            .nav-tabs { flex-direction: column; }
             .nav-tabs button { width: 100%; }
             .filters { flex-direction: column; }
             .filters input, .filters select { min-width: 100%; }
             .form-row { grid-template-columns: 1fr; }
-            table { font-size: 12px; min-width: 600px; }
+            table { font-size: 12px; }
             .attendance-student-item { flex-direction: column; align-items: flex-start; gap: 10px; }
         }
     </style>
@@ -154,15 +148,15 @@
 
         <div class="content">
             <!-- DASHBOARD VIEW -->
-            <div id="dashboardView" class="view active">
-                <div class="stats-grid">
+            <div class="view active" id="dashboardView">
+                <div class="stats-grid" id="statsGrid">
                     <div class="stat-card">
                         <h3 id="totalStudents">0</h3>
                         <p>👨‍🎓 Total Students</p>
                     </div>
                     <div class="stat-card">
-                        <h3 id="totalRevenue">₹0</h3>
-                        <p>💰 Total Revenue</p>
+                        <h3 id="totalFees">₹0</h3>
+                        <p>💰 Total Fees Collected</p>
                     </div>
                     <div class="stat-card">
                         <h3 id="pendingFees">₹0</h3>
@@ -175,115 +169,66 @@
                 </div>
 
                 <div class="card">
-                    <h2>📊 Quick Overview</h2>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
-                        <div style="padding: 15px; background: #f0fdf4; border-radius: 8px;">
-                            <p style="color: #666; font-size: 14px;">This Month Collection</p>
-                            <h3 style="color: #10b981; font-size: 24px; margin-top: 5px;" id="monthCollection">₹0</h3>
-                        </div>
-                        <div style="padding: 15px; background: #fef2f2; border-radius: 8px;">
-                            <p style="color: #666; font-size: 14px;">Defaulters</p>
-                            <h3 style="color: #ef4444; font-size: 24px; margin-top: 5px;" id="defaultersCount">0</h3>
-                        </div>
-                        <div style="padding: 15px; background: #eff6ff; border-radius: 8px;">
-                            <p style="color: #666; font-size: 14px;">New Enquiries</p>
-                            <h3 style="color: #3b82f6; font-size: 24px; margin-top: 5px;" id="newEnquiries">0</h3>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h2>Recent Students</h2>
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr><th>Student ID</th><th>Name</th><th>Phone</th><th>Class</th><th>Balance</th><th>Status</th></tr>
-                            </thead>
-                            <tbody id="recentStudentsTable">
-                                <tr><td colspan="6" style="text-align:center;">Loading...</td></tr>
-                            </tbody>
-                        </table>
+                    <h2>📅 Recent Activities</h2>
+                    <div id="recentActivities">
+                        <p style="text-align:center; color:#666; padding:20px;">Loading activities...</p>
                     </div>
                 </div>
             </div>
 
             <!-- STUDENTS VIEW -->
-            <div id="studentsView" class="view">
+            <div class="view" id="studentsView">
                 <div class="card">
                     <div class="card-header">
-                        <h2>👨‍🎓 Student Management</h2>
-                        <button class="btn btn-primary" onclick="showAddStudent()">+ Add Student</button>
+                        <h2>👨‍🎓 Students Management</h2>
+                        <button class="btn btn-primary" onclick="toggleForm('studentForm')">+ Add New Student</button>
                     </div>
-                    
-                    <div id="addStudentForm" class="form-section">
-                        <h3>Add New Student</h3>
-                        <form id="studentForm">
+
+                    <div class="form-section" id="studentForm">
+                        <h3 style="margin-bottom: 15px;">Add New Student</h3>
+                        <form id="addStudentForm">
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label>Student Name *</label>
-                                    <input type="text" id="studentName" required placeholder="Enter full name">
+                                    <label>Full Name *</label>
+                                    <input type="text" name="name" required>
                                 </div>
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" name="email">
+                                </div>
+                            </div>
+                            <div class="form-row">
                                 <div class="form-group">
                                     <label>Phone Number *</label>
-                                    <input type="tel" id="studentPhone" required placeholder="10-digit mobile" pattern="[0-9]{10}">
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Parent Name</label>
-                                    <input type="text" id="parentName" placeholder="Father/Mother name">
-                                </div>
-                                <div class="form-group">
-                                    <label>Parent Phone</label>
-                                    <input type="tel" id="parentPhone" placeholder="Parent contact" pattern="[0-9]{10}">
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Class *</label>
-                                    <select id="studentClass" required>
-                                        <option value="">Select Class</option>
-                                        <option value="11">Class 11</option>
-                                        <option value="12">Class 12</option>
-                                    </select>
+                                    <input type="tel" name="phone" required>
                                 </div>
                                 <div class="form-group">
                                     <label>Batch</label>
-                                    <select id="studentBatch">
-                                        <option value="">Select Batch (Optional)</option>
+                                    <select name="batch_id" id="studentBatchSelect">
+                                        <option value="">Select Batch</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label>Monthly Fee (₹) *</label>
-                                    <input type="number" id="monthlyFee" required placeholder="e.g., 1500">
+                                    <label>Course Fee *</label>
+                                    <input type="number" name="total_fee" required>
                                 </div>
                                 <div class="form-group">
-                                    <label>Admission Date *</label>
-                                    <input type="date" id="admissionDate" required>
+                                    <label>Address</label>
+                                    <input type="text" name="address">
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label>Address</label>
-                                <textarea id="studentAddress" rows="2" placeholder="Enter complete address"></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-success">💾 Save Student</button>
-                            <button type="button" class="btn" onclick="hideAddStudent()">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Add Student</button>
                         </form>
                     </div>
 
                     <div class="filters">
-                        <input type="text" id="searchStudent" placeholder="🔍 Search by name or phone...">
-                        <select id="filterClass">
-                            <option value="">All Classes</option>
-                            <option value="11">Class 11</option>
-                            <option value="12">Class 12</option>
-                        </select>
-                        <select id="filterBatch">
+                        <input type="text" id="searchStudent" placeholder="🔍 Search by name, phone or email..." onkeyup="filterStudents()">
+                        <select id="filterBatch" onchange="filterStudents()">
                             <option value="">All Batches</option>
                         </select>
-                        <select id="filterStatus">
+                        <select id="filterStatus" onchange="filterStudents()">
                             <option value="">All Status</option>
                             <option value="active">Active</option>
                             <option value="inactive">Inactive</option>
@@ -291,15 +236,22 @@
                     </div>
 
                     <div class="table-container">
-                        <table>
+                        <table id="studentsTable">
                             <thead>
                                 <tr>
-                                    <th>ID</th><th>Name</th><th>Phone</th><th>Class</th><th>Batch</th>
-                                    <th>Monthly Fee</th><th>Balance</th><th>Status</th><th>Actions</th>
+                                    <th>Name</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                    <th>Batch</th>
+                                    <th>Total Fee</th>
+                                    <th>Paid</th>
+                                    <th>Due</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="studentsTable">
-                                <tr><td colspan="9" style="text-align:center;">Loading...</td></tr>
+                            <tbody id="studentsTableBody">
+                                <tr><td colspan="9" style="text-align:center; padding:30px; color:#666;">Loading students...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -307,84 +259,73 @@
             </div>
 
             <!-- FEES VIEW -->
-            <div id="feesView" class="view">
+            <div class="view" id="feesView">
                 <div class="card">
                     <div class="card-header">
-                        <h2>💰 Fee Management</h2>
-                        <div>
-                            <button class="btn btn-success" onclick="showCollectFee()">+ Collect Fee</button>
-                        </div>
+                        <h2>💰 Fees Management</h2>
+                        <button class="btn btn-primary" onclick="toggleForm('feeForm')">+ Add Fee Payment</button>
                     </div>
 
-                    <div id="collectFeeForm" class="form-section">
-                        <h3>Collect Fee Payment</h3>
-                        <form id="feeForm">
+                    <div class="form-section" id="feeForm">
+                        <h3 style="margin-bottom: 15px;">Record Fee Payment</h3>
+                        <form id="addFeeForm">
                             <div class="form-row">
                                 <div class="form-group">
                                     <label>Select Student *</label>
-                                    <select id="feeStudentId" required onchange="fillStudentFee()">
-                                        <option value="">-- Select Student --</option>
+                                    <select name="student_id" id="feeStudentSelect" required>
+                                        <option value="">Select Student</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label>Month *</label>
-                                    <input type="month" id="feeMonth" required>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Amount (₹) *</label>
-                                    <input type="number" id="feeAmount" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Payment Mode *</label>
-                                    <select id="paymentMode" required>
-                                        <option value="cash">Cash</option>
-                                        <option value="upi">UPI</option>
-                                        <option value="card">Card</option>
-                                        <option value="netbanking">Net Banking</option>
-                                    </select>
+                                    <label>Amount Paid *</label>
+                                    <input type="number" name="amount" required>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
                                     <label>Payment Date *</label>
-                                    <input type="date" id="paymentDate" required>
+                                    <input type="date" name="payment_date" required>
                                 </div>
                                 <div class="form-group">
-                                    <label>Transaction ID (Optional)</label>
-                                    <input type="text" id="transactionId" placeholder="For online payments">
+                                    <label>Payment Method</label>
+                                    <select name="payment_method">
+                                        <option value="cash">Cash</option>
+                                        <option value="upi">UPI</option>
+                                        <option value="bank_transfer">Bank Transfer</option>
+                                        <option value="card">Card</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label>Notes</label>
-                                <textarea id="paymentNotes" rows="2" placeholder="Add any notes"></textarea>
+                                <label>Remarks</label>
+                                <textarea name="remarks" rows="2"></textarea>
                             </div>
-                            <button type="submit" class="btn btn-success">💰 Collect Payment</button>
-                            <button type="button" class="btn" onclick="hideCollectFee()">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Record Payment</button>
                         </form>
                     </div>
 
                     <div class="filters">
-                        <input type="month" id="filterMonth" placeholder="Filter by month">
-                        <select id="filterPaymentMode">
-                            <option value="">All Payment Modes</option>
-                            <option value="cash">Cash</option>
-                            <option value="upi">UPI</option>
-                            <option value="card">Card</option>
+                        <input type="text" id="searchFee" placeholder="🔍 Search by student name..." onkeyup="filterFees()">
+                        <select id="filterFeeMonth" onchange="filterFees()">
+                            <option value="">All Months</option>
                         </select>
                     </div>
 
                     <div class="table-container">
-                        <table>
+                        <table id="feesTable">
                             <thead>
                                 <tr>
-                                    <th>Receipt No</th><th>Date</th><th>Student</th><th>Month</th>
-                                    <th>Amount</th><th>Mode</th><th>Transaction ID</th><th>Actions</th>
+                                    <th>Date</th>
+                                    <th>Student</th>
+                                    <th>Phone</th>
+                                    <th>Amount Paid</th>
+                                    <th>Method</th>
+                                    <th>Remarks</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="feesTable">
-                                <tr><td colspan="8" style="text-align:center;">Loading...</td></tr>
+                            <tbody id="feesTableBody">
+                                <tr><td colspan="7" style="text-align:center; padding:30px; color:#666;">Loading fees...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -392,59 +333,59 @@
             </div>
 
             <!-- BATCHES VIEW -->
-            <div id="batchesView" class="view">
+            <div class="view" id="batchesView">
                 <div class="card">
                     <div class="card-header">
-                        <h2>📚 Batch Management</h2>
-                        <button class="btn btn-primary" onclick="showAddBatch()">+ Create Batch</button>
+                        <h2>📚 Batches Management</h2>
+                        <button class="btn btn-primary" onclick="toggleForm('batchForm')">+ Create New Batch</button>
                     </div>
 
-                    <div id="addBatchForm" class="form-section">
-                        <h3>Create New Batch</h3>
-                        <form id="batchForm">
+                    <div class="form-section" id="batchForm">
+                        <h3 style="margin-bottom: 15px;">Create New Batch</h3>
+                        <form id="addBatchForm">
                             <div class="form-row">
                                 <div class="form-group">
                                     <label>Batch Name *</label>
-                                    <input type="text" id="batchName" required placeholder="e.g., Class 11 Morning">
+                                    <input type="text" name="name" placeholder="e.g., Class 11 Commerce Morning" required>
                                 </div>
                                 <div class="form-group">
-                                    <label>Class *</label>
-                                    <select id="batchClass" required>
-                                        <option value="">Select Class</option>
-                                        <option value="11">Class 11</option>
-                                        <option value="12">Class 12</option>
-                                    </select>
+                                    <label>Course *</label>
+                                    <input type="text" name="course" placeholder="e.g., Class 11 Commerce" required>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label>Start Time</label>
-                                    <input type="time" id="batchStartTime">
+                                    <label>Timing *</label>
+                                    <input type="text" name="timing" placeholder="e.g., 7:00 AM - 9:00 AM" required>
                                 </div>
                                 <div class="form-group">
-                                    <label>End Time</label>
-                                    <input type="time" id="batchEndTime">
+                                    <label>Teacher Name</label>
+                                    <input type="text" name="teacher">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label>Days</label>
-                                <input type="text" id="batchDays" placeholder="e.g., Mon, Wed, Fri">
+                                <label>Description</label>
+                                <textarea name="description" rows="2"></textarea>
                             </div>
-                            <button type="submit" class="btn btn-success">📚 Create Batch</button>
-                            <button type="button" class="btn" onclick="hideAddBatch()">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Create Batch</button>
                         </form>
                     </div>
 
                     <div class="table-container">
-                        <table>
+                        <table id="batchesTable">
                             <thead>
                                 <tr>
-                                    <th>Batch ID</th><th>Batch Name</th><th>Class</th>
-                                    <th>Timing</th><th>Days</th><th>Students</th><th>Actions</th>
+                                    <th>Batch Name</th>
+                                    <th>Course</th>
+                                    <th>Timing</th>
+                                    <th>Teacher</th>
+                                    <th>Students</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="batchesTable">
-                                <tr><td colspan="7" style="text-align:center;">Loading...</td></tr>
+                            <tbody id="batchesTableBody">
+                                <tr><td colspan="7" style="text-align:center; padding:30px; color:#666;">Loading batches...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -452,56 +393,53 @@
             </div>
 
             <!-- ATTENDANCE VIEW -->
-            <div id="attendanceView" class="view">
+            <div class="view" id="attendanceView">
                 <div class="card">
                     <div class="card-header">
                         <h2>📅 Attendance Management</h2>
-                        <button class="btn btn-primary" onclick="showMarkAttendance()">✓ Mark Attendance</button>
+                        <button class="btn btn-primary" onclick="toggleForm('attendanceForm')">✓ Mark Attendance</button>
                     </div>
 
-                    <div id="markAttendanceForm" class="form-section">
-                        <h3>Mark Today's Attendance</h3>
-                        <form id="attendanceForm">
+                    <div class="form-section" id="attendanceForm">
+                        <h3 style="margin-bottom: 15px;">Mark Attendance</h3>
+                        <form id="markAttendanceForm">
                             <div class="form-row">
                                 <div class="form-group">
                                     <label>Date *</label>
-                                    <input type="date" id="attendanceDate" required>
+                                    <input type="date" name="date" id="attendanceDate" required>
                                 </div>
                                 <div class="form-group">
-                                    <label>Batch *</label>
-                                    <select id="attendanceBatch" required onchange="loadBatchStudentsForAttendance()">
+                                    <label>Select Batch *</label>
+                                    <select name="batch_id" id="attendanceBatch" onchange="loadBatchStudentsForAttendance()" required>
                                         <option value="">Select Batch</option>
                                     </select>
                                 </div>
                             </div>
-                            
-                            <div id="attendanceStudentsList" style="margin-top: 20px;"></div>
-                            
-                            <div style="margin-top: 20px;">
-                                <button type="submit" class="btn btn-success">💾 Save Attendance</button>
-                                <button type="button" class="btn" onclick="hideMarkAttendance()">Cancel</button>
-                            </div>
+                            <div id="attendanceStudentsList"></div>
+                            <button type="submit" class="btn btn-primary" style="margin-top:15px;">Save Attendance</button>
                         </form>
                     </div>
 
                     <div class="filters">
-                        <input type="date" id="filterAttendanceDate">
-                        <select id="filterAttendanceBatch">
+                        <input type="date" id="filterAttendanceDate" onchange="filterAttendance()">
+                        <select id="filterAttendanceBatch" onchange="filterAttendance()">
                             <option value="">All Batches</option>
                         </select>
-                        <button class="btn btn-info" onclick="filterAttendance()">🔍 Search</button>
                     </div>
 
                     <div class="table-container">
-                        <table>
+                        <table id="attendanceTable">
                             <thead>
                                 <tr>
-                                    <th>Date</th><th>Student Name</th><th>Batch</th>
-                                    <th>Status</th><th>Marked By</th>
+                                    <th>Date</th>
+                                    <th>Student</th>
+                                    <th>Batch</th>
+                                    <th>Status</th>
+                                    <th>Marked By</th>
                                 </tr>
                             </thead>
-                            <tbody id="attendanceTable">
-                                <tr><td colspan="5" style="text-align:center;">Select date and batch to view attendance</td></tr>
+                            <tbody id="attendanceTableBody">
+                                <tr><td colspan="5" style="text-align:center; padding:30px; color:#666;">Loading attendance...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -509,119 +447,56 @@
             </div>
 
             <!-- ENQUIRIES VIEW -->
-            <div id="enquiriesView" class="view">
+            <div class="view" id="enquiriesView">
                 <div class="card">
                     <div class="card-header">
-                        <h2>📞 Student Enquiries</h2>
-                        <button class="btn btn-primary" onclick="showAddEnquiry()">+ Add Enquiry</button>
-                    </div>
-
-                    <div id="addEnquiryForm" class="form-section">
-                        <h3>Add New Enquiry</h3>
-                        <form id="enquiryForm">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Student Name *</label>
-                                    <input type="text" id="enquiryName" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Phone Number *</label>
-                                    <input type="tel" id="enquiryPhone" required pattern="[0-9]{10}">
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Class Interested *</label>
-                                    <select id="enquiryClass" required>
-                                        <option value="">Select Class</option>
-                                        <option value="11">Class 11</option>
-                                        <option value="12">Class 12</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Source</label>
-                                    <select id="enquirySource">
-                                        <option value="website">Website</option>
-                                        <option value="referral">Referral</option>
-                                        <option value="walkin">Walk-in</option>
-                                        <option value="social">Social Media</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Notes</label>
-                                <textarea id="enquiryNotes" rows="2"></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-success">💾 Save Enquiry</button>
-                            <button type="button" class="btn" onclick="hideAddEnquiry()">Cancel</button>
-                        </form>
+                        <h2>📞 Enquiries</h2>
                     </div>
 
                     <div class="filters">
-                        <select id="filterEnquiryStatus">
+                        <input type="text" id="searchEnquiry" placeholder="🔍 Search enquiries..." onkeyup="filterEnquiries()">
+                        <select id="filterEnquiryStatus" onchange="filterEnquiries()">
                             <option value="">All Status</option>
                             <option value="new">New</option>
                             <option value="contacted">Contacted</option>
                             <option value="converted">Converted</option>
-                            <option value="lost">Lost</option>
+                            <option value="rejected">Rejected</option>
                         </select>
                     </div>
 
                     <div class="table-container">
-                        <table>
+                        <table id="enquiriesTable">
                             <thead>
                                 <tr>
-                                    <th>Date</th><th>Name</th><th>Phone</th><th>Class</th>
-                                    <th>Source</th><th>Status</th><th>Actions</th>
+                                    <th>Date</th>
+                                    <th>Name</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                    <th>Course</th>
+                                    <th>Message</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="enquiriesTable">
-                                <tr><td colspan="7" style="text-align:center;">Loading...</td></tr>
+                            <tbody id="enquiriesTableBody">
+                                <tr><td colspan="8" style="text-align:center; padding:30px; color:#666;">Loading enquiries...</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-        import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy, limit } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyA84o3QgzqsL_HJwkEL2-TLDQAzkxHhjO4",
-            authDomain: "commerce-gyan.firebaseapp.com",
-            projectId: "commerce-gyan",
-            storageBucket: "commerce-gyan.firebasestorage.app",
-            messagingSenderId: "1034104845810",
-            appId: "1:1034104845810:web:c356c101a983328f80676b"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
+        <script>
+        // Global Variables
         let allStudents = [];
         let allFees = [];
         let allBatches = [];
-        let allEnquiries = [];
         let allAttendance = [];
-        let currentUser = null;
-
-        // Auth Check
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                currentUser = user;
-                document.getElementById('loginPage').style.display = 'none';
-                document.getElementById('dashboardPage').style.display = 'block';
-                loadAllData();
-            } else {
-                document.getElementById('loginPage').style.display = 'flex';
-                document.getElementById('dashboardPage').style.display = 'none';
-            }
-        });
+        let allEnquiries = [];
+        const API_URL = 'https://commercegyan.onrender.com';
 
         // Login
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -631,546 +506,489 @@
             const errorMsg = document.getElementById('errorMsg');
 
             try {
-                await signInWithEmailAndPassword(auth, email, password);
-            } catch (error) {
-                errorMsg.textContent = 'Invalid credentials. Please check email and password.';
+                const response = await fetch(`${API_URL}/api/admin/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if(response.ok && data.token) {
+                    localStorage.setItem('adminToken', data.token);
+                    document.getElementById('loginPage').style.display = 'none';
+                    document.getElementById('dashboardPage').style.display = 'block';
+                    loadAllData();
+                } else {
+                    errorMsg.textContent = data.error || 'Invalid credentials';
+                    errorMsg.style.display = 'block';
+                }
+            } catch(error) {
+                errorMsg.textContent = 'Server error. Please try again.';
                 errorMsg.style.display = 'block';
             }
         });
 
         // Logout
-        window.logout = async () => {
-            if(confirm('Are you sure you want to logout?')) {
-                await signOut(auth);
+        function logout() {
+            localStorage.removeItem('adminToken');
+            location.reload();
+        }
+
+        // Check if already logged in
+        window.onload = () => {
+            const token = localStorage.getItem('adminToken');
+            if(token) {
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('dashboardPage').style.display = 'block';
+                loadAllData();
             }
         };
 
+        // Show View
+        function showView(viewName) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-tabs button').forEach(b => b.classList.remove('active'));
+            document.getElementById(viewName + 'View').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Toggle Form
+        function toggleForm(formId) {
+            const form = document.getElementById(formId);
+            form.style.display = form.style.display === 'none' || !form.style.display ? 'block' : 'none';
+        }
+
         // Load All Data
         async function loadAllData() {
+            const token = localStorage.getItem('adminToken');
+            const headers = { 'Authorization': `Bearer ${token}` };
+
             try {
-                await Promise.all([
-                    loadStudents(),
-                    loadFees(),
-                    loadBatches(),
-                    loadEnquiries(),
-                    loadAttendance()
+                const [students, fees, batches, attendance, enquiries] = await Promise.all([
+                    fetch(`${API_URL}/api/admin/students`, { headers }).then(r => r.json()),
+                    fetch(`${API_URL}/api/admin/fees`, { headers }).then(r => r.json()),
+                    fetch(`${API_URL}/api/admin/batches`, { headers }).then(r => r.json()),
+                    fetch(`${API_URL}/api/admin/attendance`, { headers }).then(r => r.json()),
+                    fetch(`${API_URL}/api/admin/enquiries`, { headers }).then(r => r.json())
                 ]);
+
+                allStudents = students;
+                allFees = fees;
+                allBatches = batches;
+                allAttendance = attendance;
+                allEnquiries = enquiries;
+
                 updateDashboard();
+                renderStudents();
+                renderFees();
+                renderBatches();
+                renderAttendance();
+                renderEnquiries();
                 populateDropdowns();
-            } catch (error) {
+            } catch(error) {
                 console.error('Error loading ', error);
-                alert('Error loading data. Please refresh the page.');
+                alert('Failed to load data. Please refresh the page.');
             }
         }
 
-        // Load Students
-        async function loadStudents() {
-            try {
-                const snapshot = await getDocs(query(collection(db, 'students'), orderBy('created_at', 'desc')));
-                allStudents = [];
-                snapshot.forEach(doc => allStudents.push({ id: doc.id, ...doc.data() }));
-                displayStudents();
-            } catch (error) {
-                console.error('Error loading students:', error);
-            }
-        }
-
-        // Load Fees
-        async function loadFees() {
-            try {
-                const snapshot = await getDocs(query(collection(db, 'fees'), orderBy('created_at', 'desc')));
-                allFees = [];
-                snapshot.forEach(doc => allFees.push({ id: doc.id, ...doc.data() }));
-                displayFees();
-            } catch (error) {
-                console.error('Error loading fees:', error);
-            }
-        }
-
-        // Load Batches
-        async function loadBatches() {
-            try {
-                const snapshot = await getDocs(collection(db, 'batches'));
-                allBatches = [];
-                snapshot.forEach(doc => allBatches.push({ id: doc.id, ...doc.data() }));
-                displayBatches();
-            } catch (error) {
-                console.error('Error loading batches:', error);
-            }
-        }
-
-        // Load Enquiries
-        async function loadEnquiries() {
-            try {
-                const snapshot = await getDocs(query(collection(db, 'enquiries'), orderBy('created_at', 'desc')));
-                allEnquiries = [];
-                snapshot.forEach(doc => allEnquiries.push({ id: doc.id, ...doc.data() }));
-                displayEnquiries();
-            } catch (error) {
-                console.error('Error loading enquiries:', error);
-            }
-        }
-
-        // Load Attendance
-        async function loadAttendance() {
-            try {
-                const snapshot = await getDocs(query(collection(db, 'Attendance'), orderBy('created_at', 'desc'), limit(100)));
-                allAttendance = [];
-                snapshot.forEach(doc => allAttendance.push({ id: doc.id, ...doc.data() }));
-            } catch (error) {
-                console.error('Error loading attendance:', error);
-            }
-        }
-
-        // Update Dashboard
+        // Update Dashboard Stats
         function updateDashboard() {
             document.getElementById('totalStudents').textContent = allStudents.length;
             
-            const totalRevenue = allFees.reduce((sum, fee) => sum + (fee.amount || 0), 0);
-            document.getElementById('totalRevenue').textContent = `₹${totalRevenue.toLocaleString()}`;
+            const totalFees = allFees.reduce((sum, f) => sum + (parseFloat(f.amount) || 0), 0);
+            document.getElementById('totalFees').textContent = '₹' + totalFees.toLocaleString('en-IN');
             
-            const pendingFees = allStudents.reduce((sum, s) => sum + (s.balance_due || 0), 0);
-            document.getElementById('pendingFees').textContent = `₹${pendingFees.toLocaleString()}`;
+            const totalDue = allStudents.reduce((sum, s) => {
+                const paid = allFees.filter(f => f.student_id === s.id).reduce((p, f) => p + parseFloat(f.amount), 0);
+                return sum + (parseFloat(s.total_fee || 0) - paid);
+            }, 0);
+            document.getElementById('pendingFees').textContent = '₹' + totalDue.toLocaleString('en-IN');
             
-            document.getElementById('totalBatches').textContent = allBatches.length;
+            document.getElementById('totalBatches').textContent = allBatches.filter(b => b.status === 'active').length;
 
-            const currentMonth = new Date().toISOString().slice(0, 7);
-            const monthFees = allFees.filter(f => f.payment_date && f.payment_date.startsWith(currentMonth));
-            const monthCollection = monthFees.reduce((sum, fee) => sum + (fee.amount || 0), 0);
-            document.getElementById('monthCollection').textContent = `₹${monthCollection.toLocaleString()}`;
-
-            const defaulters = allStudents.filter(s => (s.balance_due || 0) > 0);
-            document.getElementById('defaultersCount').textContent = defaulters.length;
-
-            const weekAgo = new Date();
-            weekAgo.setDate(weekAgo.getDate() - 7);
-            const newEnq = allEnquiries.filter(e => {
-                const created = new Date(e.created_at);
-                return created >= weekAgo;
-            });
-            document.getElementById('newEnquiries').textContent = newEnq.length;
-
-            displayRecentStudents();
-        }
-
-        function displayRecentStudents() {
-            const tbody = document.querySelector('#recentStudentsTable');
-            tbody.innerHTML = '';
-            const recent = allStudents.slice(0, 5);
-            
-            if (recent.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No students yet</td></tr>';
+            // Recent Activities
+            const activities = document.getElementById('recentActivities');
+            const recentFees = allFees.slice(-5).reverse();
+            if(recentFees.length === 0) {
+                activities.innerHTML = '<p style="text-align:center; color:#666; padding:20px;">No recent activities</p>';
             } else {
-                recent.forEach(s => {
-                    const balance = s.balance_due || 0;
-                    const balanceColor = balance > 0 ? '#ef4444' : '#10b981';
-                    tbody.innerHTML += `<tr>
-                        <td>${s.student_id || 'N/A'}</td>
-                        <td><strong>${s.name || 'N/A'}</strong></td>
-                        <td>${s.phone || 'N/A'}</td>
-                        <td>Class ${s.class || 'N/A'}</td>
-                        <td style="color:${balanceColor}; font-weight:600;">₹${balance}</td>
-                        <td><span class="badge badge-success">Active</span></td>
-                    </tr>`;
-                });
-            }
-        }
-
-        // Display Students
-        function displayStudents() {
-            const tbody = document.querySelector('#studentsTable');
-            tbody.innerHTML = '';
-            
-            let filtered = [...allStudents];
-            
-            const searchTerm = document.getElementById('searchStudent')?.value.toLowerCase() || '';
-            const classFilter = document.getElementById('filterClass')?.value || '';
-            const batchFilter = document.getElementById('filterBatch')?.value || '';
-            const statusFilter = document.getElementById('filterStatus')?.value || '';
-            
-            if(searchTerm) {
-                filtered = filtered.filter(s => 
-                    s.name?.toLowerCase().includes(searchTerm) || 
-                    s.phone?.includes(searchTerm)
-                );
-            }
-            if(classFilter) filtered = filtered.filter(s => s.class === classFilter);
-            if(batchFilter) filtered = filtered.filter(s => s.batch_id === batchFilter);
-            if(statusFilter) filtered = filtered.filter(s => s.status === statusFilter);
-            
-            if (filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;">No students found</td></tr>';
-            } else {
-                filtered.forEach(s => {
-                    const batch = allBatches.find(b => b.id === s.batch_id);
-                    const balance = s.balance_due || 0;
-                    const status = s.status || 'active';
-                    
-                    tbody.innerHTML += `<tr>
-                        <td>${s.student_id || 'N/A'}</td>
-                        <td><strong>${s.name || 'N/A'}</strong></td>
-                        <td>${s.phone || 'N/A'}</td>
-                        <td>Class ${s.class || 'N/A'}</td>
-                        <td>${batch?.name || 'Not Assigned'}</td>
-                        <td>₹${s.monthly_fee || 0}</td>
-                        <td style="color:${balance > 0 ? '#ef4444' : '#10b981'}; font-weight:600;">₹${balance}</td>
-                        <td><span class="badge badge-${status === 'active' ? 'success' : 'warning'}">${status}</span></td>
-                        <td>
-                            <button class="btn btn-sm btn-danger" onclick="deleteStudent('${s.id}', '${s.name}')">🗑️</button>
-                            <button class="btn btn-sm btn-primary" onclick="window.open('https://wa.me/91${s.phone}', '_blank')">📱</button>
-                        </td>
-                    </tr>`;
-                });
-            }
-        }
-
-        // Display Fees
-        function displayFees() {
-            const tbody = document.querySelector('#feesTable');
-            tbody.innerHTML = '';
-            
-            let filtered = [...allFees];
-            
-            const monthFilter = document.getElementById('filterMonth')?.value || '';
-            const modeFilter = document.getElementById('filterPaymentMode')?.value || '';
-            
-            if(monthFilter) filtered = filtered.filter(f => f.month === monthFilter);
-            if(modeFilter) filtered = filtered.filter(f => f.payment_mode === modeFilter);
-            
-            if (filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">No payments yet</td></tr>';
-            } else {
-                filtered.forEach(f => {
+                activities.innerHTML = recentFees.map(f => {
                     const student = allStudents.find(s => s.id === f.student_id);
-                    const date = f.payment_date || f.created_at || '';
-                    const displayDate = date ? new Date(date).toLocaleDateString('en-IN') : 'N/A';
-                    
-                    tbody.innerHTML += `<tr>
-                        <td><strong>${f.receipt_no || 'N/A'}</strong></td>
-                        <td>${displayDate}</td>
-                        <td>${student?.name || 'Unknown'}</td>
-                        <td>${f.month || 'N/A'}</td>
-                        <td style="color:#10b981; font-weight:600;">₹${f.amount || 0}</td>
-                        <td><span class="badge badge-info">${f.payment_mode || 'Cash'}</span></td>
-                        <td>${f.transaction_id || '-'}</td>
-                        <td>
-                            <button class="btn btn-sm btn-success" onclick="shareReceipt('${student?.phone}', '${f.receipt_no}', '${student?.name}', '${f.amount}')">📱 Share</button>
-                        </td>
-                    </tr>`;
-                });
-            }
-        }
-
-        // Display Batches
-        function displayBatches() {
-            const tbody = document.querySelector('#batchesTable');
-            tbody.innerHTML = '';
-            
-            if (allBatches.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No batches created yet</td></tr>';
-            } else {
-                allBatches.forEach(b => {
-                    const studentCount = allStudents.filter(s => s.batch_id === b.id).length;
-                    const timing = `${b.start_time || ''} - ${b.end_time || ''}`;
-                    
-                    tbody.innerHTML += `<tr>
-                        <td>${b.batch_id || b.id.slice(0,8)}</td>
-                        <td><strong>${b.name || 'N/A'}</strong></td>
-                        <td>Class ${b.class || 'N/A'}</td>
-                        <td>${timing}</td>
-                        <td>${b.days || 'N/A'}</td>
-                        <td>${studentCount}</td>
-                        <td>
-                            <button class="btn btn-sm btn-danger" onclick="deleteBatch('${b.id}', '${b.name}')">🗑️</button>
-                        </td>
-                    </tr>`;
-                });
-            }
-        }
-
-        // Display Enquiries
-        function displayEnquiries() {
-            const tbody = document.querySelector('#enquiriesTable');
-            tbody.innerHTML = '';
-            
-            let filtered = [...allEnquiries];
-            const statusFilter = document.getElementById('filterEnquiryStatus')?.value || '';
-            if(statusFilter) filtered = filtered.filter(e => e.status === statusFilter);
-            
-            if (filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No enquiries yet</td></tr>';
-            } else {
-                filtered.forEach(e => {
-                    const date = new Date(e.created_at).toLocaleDateString('en-IN');
-                    const status = e.status || 'new';
-                    const badgeClass = status === 'converted' ? 'success' : status === 'lost' ? 'danger' : 'warning';
-                    
-                    tbody.innerHTML += `<tr>
-                        <td>${date}</td>
-                        <td><strong>${e.name || 'N/A'}</strong></td>
-                        <td>${e.phone || 'N/A'}</td>
-                        <td>Class ${e.class || 'N/A'}</td>
-                        <td>${e.source || 'N/A'}</td>
-                        <td><span class="badge badge-${badgeClass}">${status}</span></td>
-                        <td>
-                            <button class="btn btn-sm btn-success" onclick="convertEnquiry('${e.id}')">✓ Convert</button>
-                            <button class="btn btn-sm btn-primary" onclick="window.open('https://wa.me/91${e.phone}', '_blank')">📱</button>
-                            <button class="btn btn-sm btn-danger" onclick="deleteEnquiry('${e.id}')">🗑️</button>
-                        </td>
-                    </tr>`;
-                });
+                    return `<p style="padding:10px; border-bottom:1px solid #e0e0e0;">💰 ${student?.name || 'Unknown'} paid ₹${f.amount} on ${new Date(f.payment_date).toLocaleDateString()}</p>`;
+                }).join('');
             }
         }
 
         // Populate Dropdowns
         function populateDropdowns() {
-            const batchSelects = document.querySelectorAll('#studentBatch, #filterBatch, #attendanceBatch, #filterAttendanceBatch');
+            const batchSelects = [
+                document.getElementById('studentBatchSelect'),
+                document.getElementById('filterBatch'),
+                document.getElementById('attendanceBatch'),
+                document.getElementById('filterAttendanceBatch')
+            ];
+
             batchSelects.forEach(select => {
-                const currentValue = select.value;
-                const isFilter = select.id.includes('filter') || select.id === 'filterAttendanceBatch';
-                select.innerHTML = isFilter ? '<option value="">All Batches</option>' : '<option value="">Select Batch</option>';
-                allBatches.forEach(b => {
-                    select.innerHTML += `<option value="${b.id}">${b.name}</option>`;
-                });
-                if(currentValue) select.value = currentValue;
+                if(select) {
+                    const currentValue = select.value;
+                    const options = select.id.includes('filter') 
+                        ? '<option value="">All Batches</option>' 
+                        : '<option value="">Select Batch</option>';
+                    
+                    select.innerHTML = options + allBatches.map(b => 
+                        `<option value="${b.id}">${b.name}</option>`
+                    ).join('');
+                    
+                    if(currentValue) select.value = currentValue;
+                }
             });
 
-            const studentSelect = document.getElementById('feeStudentId');
+            const studentSelect = document.getElementById('feeStudentSelect');
             if(studentSelect) {
-                studentSelect.innerHTML = '<option value="">-- Select Student --</option>';
-                allStudents.forEach(s => {
-                    studentSelect.innerHTML += `<option value="${s.id}">${s.name} - ${s.phone} (₹${s.monthly_fee || 0})</option>`;
-                });
+                studentSelect.innerHTML = '<option value="">Select Student</option>' + 
+                    allStudents.map(s => `<option value="${s.id}">${s.name} (${s.phone})</option>`).join('');
+            }
+
+            const monthSelect = document.getElementById('filterFeeMonth');
+            if(monthSelect && allFees.length > 0) {
+                const months = [...new Set(allFees.map(f => new Date(f.payment_date).toLocaleDateString('en-IN', {month: 'long', year: 'numeric'})))];
+                monthSelect.innerHTML = '<option value="">All Months</option>' + 
+                    months.map(m => `<option value="${m}">${m}</option>`).join('');
             }
         }
 
-        // View Navigation
-        window.showView = (viewName) => {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.querySelectorAll('.nav-tabs button').forEach(b => b.classList.remove('active'));
-            document.getElementById(viewName + 'View').classList.add('active');
-            event.target.classList.add('active');
-        };
-
-        // Student Functions
-        window.showAddStudent = () => {
-            document.getElementById('addStudentForm').style.display = 'block';
-            document.getElementById('admissionDate').valueAsDate = new Date();
-        };
-        window.hideAddStudent = () => {
-            document.getElementById('addStudentForm').style.display = 'none';
-            document.getElementById('studentForm').reset();
-        };
-
-        document.getElementById('studentForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const studentData = {
-                student_id: 'CG' + Date.now().toString().slice(-6),
-                name: document.getElementById('studentName').value,
-                phone: document.getElementById('studentPhone').value,
-                parent_name: document.getElementById('parentName').value || '',
-                parent_phone: document.getElementById('parentPhone').value || '',
-                class: document.getElementById('studentClass').value,
-                batch_id: document.getElementById('studentBatch').value || '',
-                monthly_fee: parseInt(document.getElementById('monthlyFee').value),
-                admission_date: document.getElementById('admissionDate').value,
-                address: document.getElementById('studentAddress').value || '',
-                balance_due: 0,
-                status: 'active',
-                created_at: new Date().toISOString(),
-                created_by: currentUser.email
-            };
-
-            try {
-                await addDoc(collection(db, 'students'), studentData);
-                alert('✅ Student added successfully!');
-                hideAddStudent();
-                await loadStudents();
-                updateDashboard();
-                populateDropdowns();
-            } catch (error) {
-                alert('❌ Error: ' + error.message);
+        // Render Students
+        function renderStudents(filteredData = null) {
+            const students = filteredData || allStudents;
+            const tbody = document.getElementById('studentsTableBody');
+            
+            if(students.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:30px; color:#666;">No students found</td></tr>';
+                return;
             }
-        });
 
-        window.deleteStudent = (id, name) => {
-            if(confirm(`Are you sure you want to delete student: ${name}?`)) {
-                deleteDoc(doc(db, 'students', id)).then(() => {
-                    alert('✅ Student deleted');
-                    loadStudents();
-                    updateDashboard();
-                }).catch(err => alert('❌ Error: ' + err.message));
-            }
-        };
-
-        // Search & Filter
-        document.getElementById('searchStudent')?.addEventListener('input', displayStudents);
-        document.getElementById('filterClass')?.addEventListener('change', displayStudents);
-        document.getElementById('filterBatch')?.addEventListener('change', displayStudents);
-        document.getElementById('filterStatus')?.addEventListener('change', displayStudents);
-
-        // Fee Functions
-        window.showCollectFee = () => {
-            document.getElementById('collectFeeForm').style.display = 'block';
-            document.getElementById('paymentDate').valueAsDate = new Date();
-            const currentMonth = new Date().toISOString().slice(0, 7);
-            document.getElementById('feeMonth').value = currentMonth;
-        };
-        window.hideCollectFee = () => {
-            document.getElementById('collectFeeForm').style.display = 'none';
-            document.getElementById('feeForm').reset();
-        };
-
-        window.fillStudentFee = () => {
-            const studentId = document.getElementById('feeStudentId').value;
-            const student = allStudents.find(s => s.id === studentId);
-            if(student) {
-                document.getElementById('feeAmount').value = student.monthly_fee || 0;
-            }
-        };
-
-        document.getElementById('feeForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const studentId = document.getElementById('feeStudentId').value;
-            const amount = parseInt(document.getElementById('feeAmount').value);
-            const receiptNo = 'RCP' + Date.now().toString().slice(-8);
-
-            const feeData = {
-                student_id: studentId,
-                amount: amount,
-                month: document.getElementById('feeMonth').value,
-                payment_date: document.getElementById('paymentDate').value,
-                payment_mode: document.getElementById('paymentMode').value,
-                transaction_id: document.getElementById('transactionId').value || '',
-                notes: document.getElementById('paymentNotes').value || '',
-                receipt_no: receiptNo,
-                status: 'paid',
-                created_at: new Date().toISOString(),
-                created_by: currentUser.email
-            };
-
-            try {
-                await addDoc(collection(db, 'fees'), feeData);
+            tbody.innerHTML = students.map(s => {
+                const paid = allFees.filter(f => f.student_id === s.id).reduce((sum, f) => sum + parseFloat(f.amount), 0);
+                const due = (parseFloat(s.total_fee) || 0) - paid;
+                const batch = allBatches.find(b => b.id === s.batch_id);
                 
-                const student = allStudents.find(s => s.id === studentId);
-                if(student) {
-                    const newBalance = (student.balance_due || 0) - amount;
-                    await updateDoc(doc(db, 'students', studentId), {
-                        balance_due: newBalance < 0 ? 0 : newBalance,
-                        last_payment_date: feeData.payment_date
-                    });
-                }
+                return `
+                    <tr>
+                        <td>${s.name}</td>
+                        <td>${s.phone}</td>
+                        <td>${s.email || '-'}</td>
+                        <td>${batch?.name || 'Not Assigned'}</td>
+                        <td>₹${parseFloat(s.total_fee || 0).toLocaleString('en-IN')}</td>
+                        <td>₹${paid.toLocaleString('en-IN')}</td>
+                        <td>₹${due.toLocaleString('en-IN')}</td>
+                        <td><span class="badge ${s.status === 'active' ? 'badge-success' : 'badge-danger'}">${s.status || 'active'}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-info" onclick="editStudent(${s.id})">Edit</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteStudent(${s.id})">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
 
-                alert('✅ Payment collected!\nReceipt No: ' + receiptNo);
-                hideCollectFee();
-                await loadFees();
-                await loadStudents();
-                updateDashboard();
-            } catch (error) {
-                alert('❌ Error: ' + error.message);
-            }
-        });
+        // Filter Students
+        function filterStudents() {
+            const search = document.getElementById('searchStudent').value.toLowerCase();
+            const batch = document.getElementById('filterBatch').value;
+            const status = document.getElementById('filterStatus').value;
 
-        window.shareReceipt = (phone, receiptNo, name, amount) => {
-            const msg = `🧾 *Fee Receipt*\n\nReceipt No: ${receiptNo}\nStudent: ${name}\nAmount: ₹${amount}\n\nPayment received successfully.\n\nThank you!\n*Commerce Gyan*\n📞 9278569860`;
-            window.open(`https://wa.me/91${phone}?text=${encodeURIComponent(msg)}`, '_blank');
-        };
+            const filtered = allStudents.filter(s => {
+                const matchSearch = s.name.toLowerCase().includes(search) || 
+                                  s.phone.includes(search) || 
+                                  (s.email && s.email.toLowerCase().includes(search));
+                const matchBatch = !batch || s.batch_id === batch;
+                const matchStatus = !status || s.status === status;
+                return matchSearch && matchBatch && matchStatus;
+            });
 
-        document.getElementById('filterMonth')?.addEventListener('change', displayFees);
-        document.getElementById('filterPaymentMode')?.addEventListener('change', displayFees);
+            renderStudents(filtered);
+        }
 
-        // Batch Functions
-        window.showAddBatch = () => {
-            document.getElementById('addBatchForm').style.display = 'block';
-        };
-        window.hideAddBatch = () => {
-            document.getElementById('addBatchForm').style.display = 'none';
-            document.getElementById('batchForm').reset();
-        };
-
-        document.getElementById('batchForm').addEventListener('submit', async (e) => {
+        // Add Student
+        document.getElementById('addStudentForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const batchData = {
-                batch_id: 'B' + Date.now().toString().slice(-6),
-                name: document.getElementById('batchName').value,
-                class: document.getElementById('batchClass').value,
-                start_time: document.getElementById('batchStartTime').value || '',
-                end_time: document.getElementById('batchEndTime').value || '',
-                days: document.getElementById('batchDays').value || '',
-                student_count: 0,
-                status: 'active',
-                created_at: new Date().toISOString(),
-                created_by: currentUser.email
-            };
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
 
             try {
-                await addDoc(collection(db, 'batches'), batchData);
-                alert('✅ Batch created successfully!');
-                hideAddBatch();
-                await loadBatches();
-                populateDropdowns();
-            } catch (error) {
-                alert('❌ Error: ' + error.message);
+                const response = await fetch(`${API_URL}/api/admin/students`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if(response.ok) {
+                    alert('Student added successfully!');
+                    e.target.reset();
+                    toggleForm('studentForm');
+                    loadAllData();
+                } else {
+                    alert('Failed to add student');
+                }
+            } catch(error) {
+                alert('Error adding student');
             }
         });
 
-        window.deleteBatch = (id, name) => {
-            if(confirm(`Delete batch: ${name}?`)) {
-                deleteDoc(doc(db, 'batches', id)).then(() => {
-                    alert('✅ Batch deleted');
-                    loadBatches();
-                    populateDropdowns();
-                }).catch(err => alert('❌ Error: ' + err.message));
+        // Delete Student
+        async function deleteStudent(id) {
+            if(!confirm('Are you sure you want to delete this student?')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/api/admin/students/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }
+                });
+
+                if(response.ok) {
+                    alert('Student deleted successfully!');
+                    loadAllData();
+                } else {
+                    alert('Failed to delete student');
+                }
+            } catch(error) {
+                alert('Error deleting student');
             }
-        };
+        }
 
-        // Attendance Functions - FIXED VERSION
-        window.showMarkAttendance = () => {
-            document.getElementById('markAttendanceForm').style.display = 'block';
-            document.getElementById('attendanceDate').valueAsDate = new Date();
-            document.getElementById('attendanceStudentsList').innerHTML = '<p style="padding:20px; text-align:center; color:#666;">Please select a batch to see students</p>';
-        };
-        
-        window.hideMarkAttendance = () => {
-            document.getElementById('markAttendanceForm').style.display = 'none';
-            document.getElementById('attendanceForm').reset();
-            document.getElementById('attendanceStudentsList').innerHTML = '';
-        };
+        // Render Fees
+        function renderFees(filteredData = null) {
+            const fees = filteredData || allFees;
+            const tbody = document.getElementById('feesTableBody');
+            
+            if(fees.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:30px; color:#666;">No fee records found</td></tr>';
+                return;
+            }
 
+            tbody.innerHTML = fees.slice().reverse().map(f => {
+                const student = allStudents.find(s => s.id === f.student_id);
+                return `
+                    <tr>
+                        <td>${new Date(f.payment_date).toLocaleDateString('en-IN')}</td>
+                        <td>${student?.name || 'Unknown'}</td>
+                        <td>${student?.phone || '-'}</td>
+                        <td>₹${parseFloat(f.amount).toLocaleString('en-IN')}</td>
+                        <td><span class="badge badge-info">${f.payment_method}</span></td>
+                        <td>${f.remarks || '-'}</td>
+                        <td>
+                            <button class="btn btn-sm btn-danger" onclick="deleteFee(${f.id})">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Filter Fees
+        function filterFees() {
+            const search = document.getElementById('searchFee').value.toLowerCase();
+            const month = document.getElementById('filterFeeMonth').value;
+
+            const filtered = allFees.filter(f => {
+                const student = allStudents.find(s => s.id === f.student_id);
+                const matchSearch = student?.name.toLowerCase().includes(search);
+                const matchMonth = !month || new Date(f.payment_date).toLocaleDateString('en-IN', {month: 'long', year: 'numeric'}) === month;
+                return matchSearch && matchMonth;
+            });
+
+            renderFees(filtered);
+        }
+
+        // Add Fee
+        document.getElementById('addFeeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+
+            try {
+                const response = await fetch(`${API_URL}/api/admin/fees`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if(response.ok) {
+                    alert('Fee payment recorded successfully!');
+                    e.target.reset();
+                    toggleForm('feeForm');
+                    loadAllData();
+                } else {
+                    alert('Failed to record payment');
+                }
+            } catch(error) {
+                alert('Error recording payment');
+            }
+        });
+
+        // Delete Fee
+        async function deleteFee(id) {
+            if(!confirm('Are you sure you want to delete this fee record?')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/api/admin/fees/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }
+                });
+
+                if(response.ok) {
+                    alert('Fee record deleted successfully!');
+                    loadAllData();
+                } else {
+                    alert('Failed to delete fee record');
+                }
+            } catch(error) {
+                alert('Error deleting fee record');
+            }
+        }
+
+        // Render Batches
+        function renderBatches() {
+            const tbody = document.getElementById('batchesTableBody');
+            
+            if(allBatches.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:30px; color:#666;">No batches found</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = allBatches.map(b => {
+                const studentCount = allStudents.filter(s => s.batch_id === b.id).length;
+                return `
+                    <tr>
+                        <td>${b.name}</td>
+                        <td>${b.course || '-'}</td>
+                        <td>${b.timing || '-'}</td>
+                        <td>${b.teacher || '-'}</td>
+                        <td>${studentCount}</td>
+                        <td><span class="badge ${b.status === 'active' ? 'badge-success' : 'badge-danger'}">${b.status || 'active'}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-info" onclick="editBatch(${b.id})">Edit</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteBatch(${b.id})">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Add Batch
+        document.getElementById('addBatchForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+
+            try {
+                const response = await fetch(`${API_URL}/api/admin/batches`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if(response.ok) {
+                    alert('Batch created successfully!');
+                    e.target.reset();
+                    toggleForm('batchForm');
+                    loadAllData();
+                } else {
+                    alert('Failed to create batch');
+                }
+            } catch(error) {
+                alert('Error creating batch');
+            }
+        });
+
+        // Delete Batch
+        async function deleteBatch(id) {
+            if(!confirm('Are you sure you want to delete this batch?')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/api/admin/batches/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }
+                });
+
+                if(response.ok) {
+                    alert('Batch deleted successfully!');
+                    loadAllData();
+                } else {
+                    alert('Failed to delete batch');
+                }
+            } catch(error) {
+                alert('Error deleting batch');
+            }
+        }
+
+        // Load Batch Students for Attendance (FIXED VERSION)
         window.loadBatchStudentsForAttendance = () => {
             const batchId = document.getElementById('attendanceBatch').value;
             const container = document.getElementById('attendanceStudentsList');
             
-            console.log('Loading students for batch:', batchId);
-            console.log('All students:', allStudents);
+            console.log('=== ATTENDANCE DEBUG ===');
+            console.log('Selected Batch ID:', batchId);
+            console.log('All Students:', allStudents);
+            console.log('All Batches:', allBatches);
             
             if(!batchId) {
-                container.innerHTML = '<p style="padding:20px; text-align:center; color:#666;">Please select a batch</p>';
+                container.innerHTML = '<p style="padding:20px; text-align:center; color:#666;">Please select a batch to see students</p>';
                 return;
             }
 
-            const students = allStudents.filter(s => s.batch_id === batchId && s.status === 'active');
+            let students = allStudents.filter(s => {
+                const matchesBatch = (s.batch_id === batchId) || (s.batch === batchId);
+                const isActive = (s.status === 'active') || (!s.status);
+                return matchesBatch && isActive;
+            });
             
-            console.log('Filtered students:', students);
+            console.log('Students in selected batch:', students);
             
             if(students.length === 0) {
+                console.log('No students in batch - showing all students');
+                students = allStudents.filter(s => (s.status === 'active') || (!s.status));
+                
+                if(students.length === 0) {
+                    container.innerHTML = `
+                        <div class="alert alert-warning">
+                            <strong>⚠️ No students found!</strong><br>
+                            Please add students first from the Students section.
+                        </div>
+                    `;
+                    return;
+                }
+                
                 container.innerHTML = `
-                    <div class="alert alert-warning">
-                        <strong>⚠️ No students found in this batch</strong><br>
-                        Please assign students to this batch first from the Students section.
+                    <div class="alert alert-warning" style="background:#fef3c7; padding:15px; border-radius:8px; margin-bottom:15px; border-left:4px solid #f59e0b;">
+                        <strong>⚠️ No students assigned to this batch yet</strong><br>
+                        Showing all students below. Please assign students to batches from Students section for accurate attendance.
                     </div>
                 `;
-                return;
+            } else {
+                container.innerHTML = '';
             }
 
-            container.innerHTML = '<h4 style="margin-bottom:15px; color:#333;">Mark Attendance for ' + students.length + ' Students:</h4>';
+            container.innerHTML += '<h4 style="margin:15px 0; color:#333;">Mark Attendance for ' + students.length + ' Students:</h4>';
             
             students.forEach(s => {
+                const studentBatch = allBatches.find(b => b.id === s.batch_id);
+                const batchName = studentBatch ? studentBatch.name : 'No Batch Assigned';
+                
                 container.innerHTML += `
                     <div class="attendance-student-item">
                         <div>
                             <div class="attendance-student-name">${s.name}</div>
-                            <div class="attendance-student-phone">📱 ${s.phone}</div>
+                            <div class="attendance-student-phone">📱 ${s.phone} | 📚 ${batchName}</div>
                         </div>
                         <div class="attendance-radio-group">
                             <label>
@@ -1187,146 +1005,163 @@
             });
         };
 
-        document.getElementById('attendanceForm').addEventListener('submit', async (e) => {
+        // Mark Attendance
+        document.getElementById('markAttendanceForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const batchId = document.getElementById('attendanceBatch').value;
             const date = document.getElementById('attendanceDate').value;
-            
-            if(!batchId) {
-                alert('Please select a batch');
-                return;
-            }
-            
-            const students = allStudents.filter(s => s.batch_id === batchId && s.status === 'active');
+            const batchId = document.getElementById('attendanceBatch').value;
 
-            if(students.length === 0) {
-                alert('No students in this batch');
+            if(!date || !batchId) {
+                alert('Please select date and batch');
                 return;
             }
 
-            try {
-                for(const student of students) {
-                    const statusElement = document.querySelector(`input[name="att_${student.id}"]:checked`);
-                    const status = statusElement ? statusElement.value : 'present';
-                    
-                    await addDoc(collection(db, 'Attendance'), {
-                        attendance_id: 'ATT' + Date.now().toString().slice(-8),
-                        student_id: student.id,
-                        student_name: student.name,
-                        batch_id: batchId,
-                        attendance_date: date,
-                        status: status,
-                        created_at: new Date().toISOString(),
-                        marked_by: currentUser.email
-                    });
-                }
+            const attendanceData = [];
+            const radios = document.querySelectorAll('[name^="att_"]');
+            const studentIds = [...new Set([...radios].map(r => r.name.replace('att_', '')))];
 
-                alert('✅ Attendance marked successfully for ' + students.length + ' students!');
-                hideMarkAttendance();
-                await loadAttendance();
-            } catch (error) {
-                alert('❌ Error: ' + error.message);
-                console.error('Attendance error:', error);
-            }
-        });
-
-        window.filterAttendance = async () => {
-            const date = document.getElementById('filterAttendanceDate').value;
-            const batchId = document.getElementById('filterAttendanceBatch').value;
-
-            if(!date) {
-                alert('Please select a date');
-                return;
-            }
-
-            const tbody = document.querySelector('#attendanceTable');
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Loading...</td></tr>';
-
-            let filtered = allAttendance.filter(a => a.attendance_date === date);
-            if(batchId) filtered = filtered.filter(a => a.batch_id === batchId);
-
-            tbody.innerHTML = '';
-            if(filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No attendance records found for this date</td></tr>';
-            } else {
-                filtered.forEach(a => {
-                    const batch = allBatches.find(b => b.id === a.batch_id);
-                    const statusBadge = a.status === 'present' ? 'success' : 'danger';
-                    
-                    tbody.innerHTML += `<tr>
-                        <td>${a.attendance_date}</td>
-                        <td>${a.student_name}</td>
-                        <td>${batch?.name || 'N/A'}</td>
-                        <td><span class="badge badge-${statusBadge}">${a.status}</span></td>
-                        <td>${a.marked_by || 'Admin'}</td>
-                    </tr>`;
+            studentIds.forEach(studentId => {
+                const status = document.querySelector(`[name="att_${studentId}"]:checked`)?.value || 'absent';
+                attendanceData.push({
+                    student_id: studentId,
+                    batch_id: batchId,
+                    date: date,
+                    status: status
                 });
-            }
-        };
-
-        // Enquiry Functions
-        window.showAddEnquiry = () => {
-            document.getElementById('addEnquiryForm').style.display = 'block';
-        };
-        window.hideAddEnquiry = () => {
-            document.getElementById('addEnquiryForm').style.display = 'none';
-            document.getElementById('enquiryForm').reset();
-        };
-
-        document.getElementById('enquiryForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const enquiryData = {
-                name: document.getElementById('enquiryName').value,
-                phone: document.getElementById('enquiryPhone').value,
-                class: document.getElementById('enquiryClass').value,
-                source: document.getElementById('enquirySource').value,
-                notes: document.getElementById('enquiryNotes').value || '',
-                status: 'new',
-                created_at: new Date().toISOString(),
-                created_by: currentUser.email
-            };
+            });
 
             try {
-                await addDoc(collection(db, 'enquiries'), enquiryData);
-                alert('✅ Enquiry added successfully!');
-                hideAddEnquiry();
-                await loadEnquiries();
-                updateDashboard();
-            } catch (error) {
-                alert('❌ Error: ' + error.message);
+                const response = await fetch(`${API_URL}/api/admin/attendance`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                    },
+                    body: JSON.stringify({ attendance: attendanceData })
+                });
+
+                if(response.ok) {
+                    alert('Attendance marked successfully!');
+                    e.target.reset();
+                    toggleForm('attendanceForm');
+                    loadAllData();
+                } else {
+                    alert('Failed to mark attendance');
+                }
+            } catch(error) {
+                alert('Error marking attendance');
             }
         });
 
-        window.convertEnquiry = async (id) => {
-            const enquiry = allEnquiries.find(e => e.id === id);
-            if(!enquiry) return;
+        // Render Attendance
+        function renderAttendance(filteredData = null) {
+            const attendance = filteredData || allAttendance;
+            const tbody = document.getElementById('attendanceTableBody');
             
-            if(confirm(`Convert "${enquiry.name}" to student?\n\nNote: You'll need to add remaining details (fee, batch, etc.) from Students section.`)) {
-                try {
-                    await updateDoc(doc(db, 'enquiries', id), { 
-                        status: 'converted',
-                        converted_at: new Date().toISOString()
-                    });
-                    alert('✅ Enquiry marked as converted!\n\nNow go to Students tab to add full details.');
-                    loadEnquiries();
-                    updateDashboard();
-                } catch (error) {
-                    alert('❌ Error: ' + error.message);
+            if(attendance.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:30px; color:#666;">No attendance records found</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = attendance.slice().reverse().map(a => {
+                const student = allStudents.find(s => s.id == a.student_id);
+                const batch = allBatches.find(b => b.id == a.batch_id);
+                return `
+                    <tr>
+                        <td>${new Date(a.date).toLocaleDateString('en-IN')}</td>
+                        <td>${student?.name || 'Unknown'}</td>
+                        <td>${batch?.name || 'Unknown'}</td>
+                        <td><span class="badge ${a.status === 'present' ? 'badge-success' : 'badge-danger'}">${a.status}</span></td>
+                        <td>Admin</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Filter Attendance
+        function filterAttendance() {
+            const date = document.getElementById('filterAttendanceDate').value;
+            const batch = document.getElementById('filterAttendanceBatch').value;
+
+            const filtered = allAttendance.filter(a => {
+                const matchDate = !date || a.date === date;
+                const matchBatch = !batch || a.batch_id == batch;
+                return matchDate && matchBatch;
+            });
+
+            renderAttendance(filtered);
+        }
+
+        // Render Enquiries
+        function renderEnquiries(filteredData = null) {
+            const enquiries = filteredData || allEnquiries;
+            const tbody = document.getElementById('enquiriesTableBody');
+            
+            if(enquiries.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:30px; color:#666;">No enquiries found</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = enquiries.slice().reverse().map(e => {
+                return `
+                    <tr>
+                        <td>${new Date(e.created_at).toLocaleDateString('en-IN')}</td>
+                        <td>${e.name}</td>
+                        <td>${e.phone}</td>
+                        <td>${e.email || '-'}</td>
+                        <td>${e.course || '-'}</td>
+                        <td>${e.message || '-'}</td>
+                        <td><span class="badge badge-${e.status === 'new' ? 'warning' : e.status === 'converted' ? 'success' : 'info'}">${e.status || 'new'}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-success" onclick="updateEnquiryStatus(${e.id}, 'contacted')">Contact</button>
+                            <button class="btn btn-sm btn-info" onclick="updateEnquiryStatus(${e.id}, 'converted')">Convert</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Filter Enquiries
+        function filterEnquiries() {
+            const search = document.getElementById('searchEnquiry').value.toLowerCase();
+            const status = document.getElementById('filterEnquiryStatus').value;
+
+            const filtered = allEnquiries.filter(e => {
+                const matchSearch = e.name.toLowerCase().includes(search) || 
+                                  e.phone.includes(search) || 
+                                  (e.email && e.email.toLowerCase().includes(search));
+                const matchStatus = !status || e.status === status;
+                return matchSearch && matchStatus;
+            });
+
+            renderEnquiries(filtered);
+        }
+
+        // Update Enquiry Status
+        async function updateEnquiryStatus(id, status) {
+            try {
+                const response = await fetch(`${API_URL}/api/admin/enquiries/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                    },
+                    body: JSON.stringify({ status })
+                });
+
+                if(response.ok) {
+                    alert('Enquiry status updated!');
+                    loadAllData();
+                } else {
+                    alert('Failed to update status');
                 }
+            } catch(error) {
+                alert('Error updating status');
             }
-        };
+        }
 
-        window.deleteEnquiry = (id) => {
-            if(confirm('Delete this enquiry?')) {
-                deleteDoc(doc(db, 'enquiries', id)).then(() => {
-                    alert('✅ Enquiry deleted');
-                    loadEnquiries();
-                    updateDashboard();
-                }).catch(err => alert('❌ Error: ' + err.message));
-            }
-        };
-
-        document.getElementById('filterEnquiryStatus')?.addEventListener('change', displayEnquiries);
+        // Set today's date as default for attendance
+        document.getElementById('attendanceDate').valueAsDate = new Date();
     </script>
 </body>
 </html>
